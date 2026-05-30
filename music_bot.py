@@ -20,7 +20,7 @@ from aiohttp_socks import ProxyConnector
 # ================= ВАШИ ДАННЫЕ ===================
 # ==================================================
 DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
-FFMPEG_PATH = os.getenv("FFMPEG_PATH", r"C:\Users\sereg\Desktop\VNL.MEMXRY Music Bot\ffmpeg-2026-05-06-git-f2e5eff3ff-full_build\bin\ffmpeg.exe")
+FFMPEG_PATH = os.getenv("FFMPEG_PATH", "ffmpeg")
 PROXY_URL = os.getenv("PROXY_URL", None)
 
 VK_COOKIES_PATH = r"C:\Users\sereg\Desktop\VNL.MEMXRY Music Bot\vk_cookies.txt"
