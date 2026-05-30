@@ -1,4 +1,3 @@
-@"
 FROM python:3.13-slim
 
 RUN apt-get update && apt-get install -y ffmpeg && rm -rf /var/lib/apt/lists/*
@@ -11,4 +10,3 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 CMD ["python", "music_bot.py"]
-"@ | Out-File -FilePath Dockerfile -Encoding utf8
