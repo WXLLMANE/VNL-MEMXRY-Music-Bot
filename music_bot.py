@@ -15,17 +15,13 @@ import logging
 import aiosqlite
 import aiohttp
 from aiohttp_socks import ProxyConnector
-import os
-print("DEBUG: DISCORD_TOKEN =", os.getenv("DISCORD_TOKEN"))
-print("DEBUG: FFMPEG_PATH =", os.getenv("FFMPEG_PATH"))
-print("DEBUG: PROXY_URL =", os.getenv("PROXY_URL"))
 
 # ==================================================
 # ================= ВАШИ ДАННЫЕ ===================
 # ==================================================
-DISCORD_TOKEN = "MTUwMzA0MzQ5MjM4ODI3ODMyMg.GFU7ze.ZPPzhp7ptibgdOm771KsUTJCp2xY-J63A1O4mc"
-FFMPEG_PATH = r"C:\Users\sereg\Desktop\VNL.MEMXRY Music Bot\ffmpeg-2026-05-06-git-f2e5eff3ff-full_build\bin\ffmpeg.exe"
-PROXY_URL = None
+DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
+FFMPEG_PATH = os.getenv("FFMPEG_PATH", r"C:\Users\sereg\Desktop\VNL.MEMXRY Music Bot\ffmpeg-2026-05-06-git-f2e5eff3ff-full_build\bin\ffmpeg.exe")
+PROXY_URL = os.getenv("PROXY_URL", None)
 
 VK_COOKIES_PATH = r"C:\Users\sereg\Desktop\VNL.MEMXRY Music Bot\vk_cookies.txt"
 
@@ -1281,5 +1277,4 @@ if __name__ == '__main__':
             logger.info(f"Прокси установлен: {PROXY_URL}")
         except Exception as e:
             print(f"[Прокси] Ошибка настройки прокси: {e}")
-    bot.run(DISCORD_TOKEN)#   d u m m y   c h a n g e  
- 
+    bot.run(DISCORD_TOKEN)
