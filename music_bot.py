@@ -1277,4 +1277,5 @@ if __name__ == '__main__':
             logger.info(f"Прокси установлен: {PROXY_URL}")
         except Exception as e:
             print(f"[Прокси] Ошибка настройки прокси: {e}")
-    bot.run(DISCORD_TOKEN)
+    bot.run(DISCORD_TOKEN)#   d u m m y   c h a n g e  
+ 
