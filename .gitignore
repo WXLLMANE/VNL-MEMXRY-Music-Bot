@@ -1,0 +1,34 @@
+# FFmpeg (устанавливается отдельно на сервере)
+ffmpeg-2026-05-06-git-f2e5eff3ff-full_build/
+ffmpeg/
+
+# Временные и служебные файлы
+*.log
+*.db
+*.db-journal
+__pycache__/
+*.pyc
+venv/
+.env
+.vscode/
+
+# Бэкап очереди (не нужно в репозитории)
+queue_backup.json
+
+# Cookies (содержат приватные данные)
+vk_cookies.txt
+youtube_cookies.txt
+
+# Конфиги с токенами (никогда!)
+config_vk.ini
+
+# Файлы IDE
+.idea/
+*.swp
+
+# Логи и базы данных
+bot.log
+playlists.db
+queue_backup.json
+lavalink-server/
+logs/
