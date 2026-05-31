@@ -24,6 +24,7 @@ DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
 FFMPEG_PATH = os.getenv("FFMPEG_PATH", "ffmpeg")
 PROXY_URL = os.getenv("PROXY_URL", None)
 VK_COOKIES_PATH = os.getenv("VK_COOKIES_PATH", None)
+YOUTUBE_COOKIES_PATH = os.getenv("YOUTUBE_COOKIES_PATH", None)  # для обхода ботов и возрастных ограничений
 
 # ==================================================
 # ================= НАСТРОЙКИ =====================
@@ -45,6 +46,7 @@ queues = {}
 player_controllers = {}
 volume_levels = {}
 
+# Настройки yt-dlp
 ydl_opts = {
     'quiet': True,
     'no_warnings': True,
@@ -55,6 +57,9 @@ ydl_opts = {
 if VK_COOKIES_PATH and os.path.exists(VK_COOKIES_PATH):
     ydl_opts['cookiefile'] = VK_COOKIES_PATH
     logger.info("Загружены cookies для VK")
+if YOUTUBE_COOKIES_PATH and os.path.exists(YOUTUBE_COOKIES_PATH):
+    ydl_opts['cookiefile'] = YOUTUBE_COOKIES_PATH
+    logger.info("Загружены cookies для YouTube")
 
 ffmpeg_options = {
     'options': '-vn',
@@ -881,16 +886,15 @@ async def playlistyt(ctx, *, query):
 
 @bot.command(name='playya')
 async def playya(ctx, *, query):
-    # Яндекс.Музыка отключена (требует подписки и отдельного токена)
-    await ctx.send("⚠️ Команда playya временно отключена из‑за ограничений API. Используйте !play для поиска на YouTube.")
+    await ctx.send("⚠️ Команда playya временно отключена. Используйте !play для поиска на YouTube.")
 
 @bot.command(name='mywave')
 async def mywave(ctx):
-    await ctx.send("⚠️ Команда mywave временно отключена. Используйте радио-режим (!radio) для автоподбора треков на YouTube.")
+    await ctx.send("⚠️ Команда mywave временно отключена. Используйте радио-режим (!radio).")
 
 @bot.command(name='mywaveoff')
 async def mywaveoff(ctx):
-    await ctx.send("⚠️ Команда mywaveoff неактивна, так как режим mywave отключён.")
+    await ctx.send("⚠️ Команда mywaveoff неактивна.")
 
 @bot.command(name='playvk')
 async def playvk(ctx, url: str):
