@@ -18,13 +18,24 @@ import shutil
 from aiohttp_socks import ProxyConnector
 
 # ==================================================
+# ================= НАСТРОЙКА COOKIES ==============
+# ==================================================
+# Если переменная окружения YOUTUBE_COOKIES_CONTENT содержит текст cookies, создаём файл
+if os.getenv("YOUTUBE_COOKIES_CONTENT"):
+    with open("youtube_cookies.txt", "w", encoding="utf-8") as f:
+        f.write(os.getenv("YOUTUBE_COOKIES_CONTENT"))
+    YOUTUBE_COOKIES_PATH = "youtube_cookies.txt"
+else:
+    YOUTUBE_COOKIES_PATH = os.getenv("YOUTUBE_COOKIES_PATH", None)
+
+# ==================================================
 # ================= ВАШИ ДАННЫЕ ===================
 # ==================================================
 DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
 FFMPEG_PATH = os.getenv("FFMPEG_PATH", "ffmpeg")
 PROXY_URL = os.getenv("PROXY_URL", None)
 VK_COOKIES_PATH = os.getenv("VK_COOKIES_PATH", None)
-YOUTUBE_COOKIES_PATH = os.getenv("YOUTUBE_COOKIES_PATH", None)  # для обхода ботов и возрастных ограничений
+# YOUTUBE_COOKIES_PATH уже определена выше
 
 # ==================================================
 # ================= НАСТРОЙКИ =====================
@@ -46,7 +57,7 @@ queues = {}
 player_controllers = {}
 volume_levels = {}
 
-# Настройки yt-dlp
+# Настройки yt-dlp (поддержка cookies для YouTube и VK)
 ydl_opts = {
     'quiet': True,
     'no_warnings': True,
@@ -54,12 +65,12 @@ ydl_opts = {
     'source_address': '0.0.0.0',
     'default_search': 'ytsearch',
 }
-if VK_COOKIES_PATH and os.path.exists(VK_COOKIES_PATH):
-    ydl_opts['cookiefile'] = VK_COOKIES_PATH
-    logger.info("Загружены cookies для VK")
 if YOUTUBE_COOKIES_PATH and os.path.exists(YOUTUBE_COOKIES_PATH):
     ydl_opts['cookiefile'] = YOUTUBE_COOKIES_PATH
     logger.info("Загружены cookies для YouTube")
+if VK_COOKIES_PATH and os.path.exists(VK_COOKIES_PATH):
+    ydl_opts['cookiefile'] = VK_COOKIES_PATH
+    logger.info("Загружены cookies для VK")
 
 ffmpeg_options = {
     'options': '-vn',
@@ -886,11 +897,11 @@ async def playlistyt(ctx, *, query):
 
 @bot.command(name='playya')
 async def playya(ctx, *, query):
-    await ctx.send("⚠️ Команда playya временно отключена. Используйте !play для поиска на YouTube.")
+    await ctx.send("⚠️ Команда playya временно отключена (требуется подписка Яндекс.Музыки). Используйте !play для поиска на YouTube.")
 
 @bot.command(name='mywave')
 async def mywave(ctx):
-    await ctx.send("⚠️ Команда mywave временно отключена. Используйте радио-режим (!radio).")
+    await ctx.send("⚠️ Команда mywave временно отключена. Используйте радио-режим (!radio) для автоподбора треков на YouTube.")
 
 @bot.command(name='mywaveoff')
 async def mywaveoff(ctx):
