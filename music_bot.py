@@ -68,7 +68,7 @@ ydl_opts = {
     'extract_flat': False,
     'source_address': '0.0.0.0',
     'default_search': 'ytsearch',
-    'format': 'bestaudio/best',   # явный выбор аудиоформата
+    # 'format' удалён – пусть yt-dlp сам выбирает лучший аудиоформат
 }
 
 # Добавляем cookies для YouTube
