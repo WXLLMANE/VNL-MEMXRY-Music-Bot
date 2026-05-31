@@ -25,8 +25,13 @@ if os.getenv("YOUTUBE_COOKIES_CONTENT"):
     with open("youtube_cookies.txt", "w", encoding="utf-8") as f:
         f.write(os.getenv("YOUTUBE_COOKIES_CONTENT"))
     YOUTUBE_COOKIES_PATH = "youtube_cookies.txt"
+    print("✅ Создан файл cookies для YouTube из переменной окружения")
 else:
     YOUTUBE_COOKIES_PATH = os.getenv("YOUTUBE_COOKIES_PATH", None)
+    if YOUTUBE_COOKIES_PATH:
+        print(f"✅ Используется файл cookies для YouTube: {YOUTUBE_COOKIES_PATH}")
+    else:
+        print("⚠️ YouTube cookies не заданы. Возможны ошибки возрастных ограничений.")
 
 # ==================================================
 # ================= ВАШИ ДАННЫЕ ===================
@@ -35,7 +40,6 @@ DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
 FFMPEG_PATH = os.getenv("FFMPEG_PATH", "ffmpeg")
 PROXY_URL = os.getenv("PROXY_URL", None)
 VK_COOKIES_PATH = os.getenv("VK_COOKIES_PATH", None)
-# YOUTUBE_COOKIES_PATH уже определена выше
 
 # ==================================================
 # ================= НАСТРОЙКИ =====================
@@ -57,20 +61,24 @@ queues = {}
 player_controllers = {}
 volume_levels = {}
 
-# Настройки yt-dlp (поддержка cookies для YouTube и VK)
+# Настройки yt-dlp (с явным указанием формата)
 ydl_opts = {
     'quiet': True,
     'no_warnings': True,
     'extract_flat': False,
     'source_address': '0.0.0.0',
     'default_search': 'ytsearch',
+    'format': 'bestaudio/best',   # явный выбор аудиоформата
 }
+
+# Добавляем cookies для YouTube
 if YOUTUBE_COOKIES_PATH and os.path.exists(YOUTUBE_COOKIES_PATH):
     ydl_opts['cookiefile'] = YOUTUBE_COOKIES_PATH
-    logger.info("Загружены cookies для YouTube")
+    logger.info("✅ YouTube cookies добавлены в ydl_opts")
+# Добавляем cookies для VK
 if VK_COOKIES_PATH and os.path.exists(VK_COOKIES_PATH):
     ydl_opts['cookiefile'] = VK_COOKIES_PATH
-    logger.info("Загружены cookies для VK")
+    logger.info("✅ VK cookies добавлены в ydl_opts")
 
 ffmpeg_options = {
     'options': '-vn',
