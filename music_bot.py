@@ -14,16 +14,16 @@ import os
 import logging
 import aiosqlite
 import aiohttp
+import shutil
 from aiohttp_socks import ProxyConnector
 
 # ==================================================
 # ================= ВАШИ ДАННЫЕ ===================
 # ==================================================
 DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
-FFMPEG_PATH = os.getenv("FFMPEG_PATH", "ffmpeg")
+FFMPEG_PATH = os.getenv("FFMPEG_PATH", "ffmpeg")          # на Railway ffmpeg уже в PATH
 PROXY_URL = os.getenv("PROXY_URL", None)
-
-VK_COOKIES_PATH = r"C:\Users\sereg\Desktop\VNL.MEMXRY Music Bot\vk_cookies.txt"
+VK_COOKIES_PATH = os.getenv("VK_COOKIES_PATH", None)     # опционально, можно задать на Railway
 
 # ==================================================
 # ================= НАСТРОЙКИ =====================
@@ -209,7 +209,6 @@ async def extract_vk_playlist(url: str):
         return []
 
 async def spogo_playlist_items(playlist_id: str, limit=50):
-    import shutil
     spogo_path = shutil.which('spogo')
     if not spogo_path:
         return []
@@ -242,7 +241,6 @@ async def spogo_playlist_items(playlist_id: str, limit=50):
         return []
 
 async def spogo_info_track(track_id: str):
-    import shutil
     spogo_path = shutil.which('spogo')
     if not spogo_path:
         return None
@@ -269,7 +267,6 @@ async def spogo_info_track(track_id: str):
         return None
 
 async def spogo_search_track(query: str):
-    import shutil
     spogo_path = shutil.which('spogo')
     if not spogo_path:
         return None
