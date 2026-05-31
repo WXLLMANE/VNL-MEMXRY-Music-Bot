@@ -879,7 +879,19 @@ async def playlistyt(ctx, *, query):
             await ctx.send(f"⚠️ Не удалось извлечь аудио для `{title}`, пропускаю.")
     await ctx.send(f"✅ Добавлено **{added}** из {total} треков.")
 
-# --- VK команда (playvk) ---
+@bot.command(name='playya')
+async def playya(ctx, *, query):
+    # Яндекс.Музыка отключена (требует подписки и отдельного токена)
+    await ctx.send("⚠️ Команда playya временно отключена из‑за ограничений API. Используйте !play для поиска на YouTube.")
+
+@bot.command(name='mywave')
+async def mywave(ctx):
+    await ctx.send("⚠️ Команда mywave временно отключена. Используйте радио-режим (!radio) для автоподбора треков на YouTube.")
+
+@bot.command(name='mywaveoff')
+async def mywaveoff(ctx):
+    await ctx.send("⚠️ Команда mywaveoff неактивна, так как режим mywave отключён.")
+
 @bot.command(name='playvk')
 async def playvk(ctx, url: str):
     if not ctx.author.voice:
@@ -911,7 +923,6 @@ async def playvk(ctx, url: str):
         await asyncio.sleep(0.3)
     await ctx.send(f"✅ Добавлено **{added}** треков из VK.")
 
-# --- SoundCloud ---
 @bot.command(name='playsc')
 async def playsc(ctx, *, query):
     if not ctx.author.voice:
@@ -924,7 +935,6 @@ async def playsc(ctx, *, query):
         await vc.move_to(ctx.author.voice.channel)
     await play(ctx, query=f"scsearch:{query}")
 
-# --- Управление ---
 @bot.command(name='skip')
 async def skip(ctx):
     vc = ctx.voice_client
@@ -1107,11 +1117,13 @@ async def sync_commands(ctx):
         await tree.sync()
         await ctx.send("✅ Слэш-команды синхронизированы")
         logger.info("Слэш-команды синхронизированы")
+    except discord.Forbidden:
+        await ctx.send("❌ У бота нет прав отправлять сообщения в этом канале. Синхронизация выполнена, но ответ не может быть доставлен.")
     except Exception as e:
         await ctx.send(f"❌ Ошибка синхронизации: {e}")
         logger.error(f"Ошибка синхронизации слэш-команд: {e}")
 
-# ================= СЛЭШ-КОМАНДЫ =================
+# ---------- Слэш-команды ----------
 @tree.command(name="play", description="Воспроизвести трек или плейлист (YouTube, Spotify)")
 async def slash_play(interaction: discord.Interaction, query: str):
     await interaction.response.defer()
@@ -1129,6 +1141,21 @@ async def slash_playlistyt(interaction: discord.Interaction, query: str):
     await interaction.response.defer()
     ctx = await commands.Context.from_interaction(interaction)
     await playlistyt.callback(ctx, query=query)
+
+@tree.command(name="playya", description="Воспроизвести трек с Яндекс.Музыки (отключено)")
+async def slash_playya(interaction: discord.Interaction, query: str):
+    await interaction.response.defer()
+    await interaction.followup.send("⚠️ Команда playya временно отключена.", ephemeral=True)
+
+@tree.command(name="mywave", description="Включить 'Мою волну' (отключено)")
+async def slash_mywave(interaction: discord.Interaction):
+    await interaction.response.defer()
+    await interaction.followup.send("⚠️ Команда mywave временно отключена.", ephemeral=True)
+
+@tree.command(name="mywaveoff", description="Отключить 'Мою волну'")
+async def slash_mywaveoff(interaction: discord.Interaction):
+    await interaction.response.defer()
+    await interaction.followup.send("⚠️ Команда mywaveoff неактивна.", ephemeral=True)
 
 @tree.command(name="playvk", description="Воспроизвести трек или плейлист из VK")
 async def slash_playvk(interaction: discord.Interaction, url: str):
@@ -1227,7 +1254,6 @@ async def slash_info(interaction: discord.Interaction):
     embed.add_field(name="Префиксные команды", value="Все команды также доступны с ! (например, !play)", inline=False)
     await interaction.followup.send(embed=embed)
 
-# ---------- Контекстное меню ----------
 @tree.context_menu(name="Добавить в очередь")
 async def add_to_queue_context(interaction: discord.Interaction, message: discord.Message):
     await interaction.response.defer()
