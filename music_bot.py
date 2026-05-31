@@ -21,9 +21,9 @@ from aiohttp_socks import ProxyConnector
 # ================= ВАШИ ДАННЫЕ ===================
 # ==================================================
 DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
-FFMPEG_PATH = os.getenv("FFMPEG_PATH", "ffmpeg")          # на Railway ffmpeg уже в PATH
+FFMPEG_PATH = os.getenv("FFMPEG_PATH", "ffmpeg")
 PROXY_URL = os.getenv("PROXY_URL", None)
-VK_COOKIES_PATH = os.getenv("VK_COOKIES_PATH", None)     # опционально, можно задать на Railway
+VK_COOKIES_PATH = os.getenv("VK_COOKIES_PATH", None)
 
 # ==================================================
 # ================= НАСТРОЙКИ =====================
@@ -45,7 +45,6 @@ queues = {}
 player_controllers = {}
 volume_levels = {}
 
-# Настройки yt-dlp
 ydl_opts = {
     'quiet': True,
     'no_warnings': True,
@@ -817,7 +816,6 @@ async def play(ctx, *, query):
             await ctx.send(f"⚠️ Не удалось извлечь звук из `{title}`, пробую следующий...")
     await ctx.send("❌ Все найденные варианты недоступны для извлечения аудио.")
 
-# ================= НОВЫЕ КОМАНДЫ ДЛЯ playyt и playlistyt =================
 @bot.command(name='playyt')
 async def playyt(ctx, *, query):
     if not ctx.author.voice:
@@ -828,6 +826,7 @@ async def playyt(ctx, *, query):
         vc = await ctx.author.voice.channel.connect()
     elif vc.channel != ctx.author.voice.channel:
         await vc.move_to(ctx.author.voice.channel)
+
     entries = await search_youtube(query)
     if not entries:
         await ctx.send("❌ Ничего не найдено на YouTube.")
@@ -856,6 +855,7 @@ async def playlistyt(ctx, *, query):
         vc = await ctx.author.voice.channel.connect()
     elif vc.channel != ctx.author.voice.channel:
         await vc.move_to(ctx.author.voice.channel)
+
     await ctx.send(f"🔍 Ищу плейлист YouTube по запросу: {query}")
     entries = await search_youtube_playlist(query, max_results=1)
     if not entries:
@@ -1101,7 +1101,17 @@ async def info(ctx):
     embed.add_field(name="Слэш-команды", value="/play, /skip, /stop, /queue, /pause, /resume, /volume", inline=False)
     await ctx.send(embed=embed)
 
-# ---------- Слэш-команды ----------
+@bot.command(name='sync')
+async def sync_commands(ctx):
+    try:
+        await tree.sync()
+        await ctx.send("✅ Слэш-команды синхронизированы")
+        logger.info("Слэш-команды синхронизированы")
+    except Exception as e:
+        await ctx.send(f"❌ Ошибка синхронизации: {e}")
+        logger.error(f"Ошибка синхронизации слэш-команд: {e}")
+
+# ================= СЛЭШ-КОМАНДЫ =================
 @tree.command(name="play", description="Воспроизвести трек или плейлист (YouTube, Spotify)")
 async def slash_play(interaction: discord.Interaction, query: str):
     await interaction.response.defer()
